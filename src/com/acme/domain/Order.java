@@ -1,5 +1,6 @@
 package com.acme.domain;
 
+import com.acme.utils.HolidayOrdersNotAllowedException;
 import com.acme.utils.MyDate;
 
 public class Order {
@@ -18,7 +19,10 @@ private static Rushable rushable;
 		boolean priorityOrder = false;if( rushable != null ) {priorityOrder = rushable.isRushable(orderDate, orderAmount);}
 		return priorityOrder;}
 
-	public Order(MyDate d, double amt, String c, Product p, int q) {setOrderDate(d);orderAmount = amt;customer = c;
+	public Order(MyDate d, double amt, String c, Product p, int q) {
+		try{
+		setOrderDate(d);} catch (HolidayOrdersNotAllowedException e){System.out.println("The order date for an order cannot be a holiday!  Application closing.");System.exit(0); }
+		orderAmount = amt;customer = c;
 		product = p;quantity = q;}
 	public String toString() {
 		return quantity + " ea. " + product + " for " + customer;
@@ -73,9 +77,14 @@ private static Rushable rushable;
 		return orderDate;
 	}
 
-	public void setOrderDate(MyDate orderDate)
-	{if (isHoliday(orderDate)) {System.out.println("Order date, " + orderDate + ", cannot be set to a holiday!");}
-	else {this.orderDate = orderDate;}}
+	public void setOrderDate(MyDate orderDate) throws HolidayOrdersNotAllowedException {
+		if (isHoliday(orderDate)) {
+			System.out.println("Order date, " + orderDate + ", cannot be set to a holiday!");
+		throw new HolidayOrdersNotAllowedException(orderDate);}
+		else {
+		this.orderDate = orderDate;}
+	}
+
 	public double getOrderAmount() {
 		return orderAmount;
 	}

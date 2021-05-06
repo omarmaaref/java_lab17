@@ -5,12 +5,13 @@ public class MyDate {
 	private int day;
 	private int year;
 	private int month;
-	private static MyDate[] holidays={
+	/*private static MyDate[] holidays={
 			new MyDate(1,1,2016),
 			new MyDate(9,5,2016),
 			new MyDate(5,30,2016),
 			new MyDate(11,24,2016),
-	};
+	};*/
+	private static MyDate[] holidays;
 public static MyDate[] getHolidays(){
 	return holidays; }
 	public static void listHolidays() {System.out.println("the holidays are:");
@@ -20,16 +21,19 @@ public static MyDate[] getHolidays(){
 		{System.out.println(x); }
 }
 	public MyDate() {
-		this(1, 1, 1900);
+	//	this(1, 1, 1900);
 	}
 
-	public MyDate(int m, int d, int y) {
+	public MyDate(int m, int d, int y) throws InvalidDateException{
 
-		if (valid(d, m, y)) {
+		try{ valid(d, m, y);
 			month = m;
 			day = d;
-			year = y;
-		}
+			year = y;}
+		catch(InvalidDateException e) {
+			System.out.println("The date is invalid! Application closing.");
+			throw new InvalidDateException();
+			}
 	}
 
 	public String toString() {
@@ -56,46 +60,51 @@ public static MyDate[] getHolidays(){
 	}
 
 	public void setDay(int day) {
-		if (valid(day, month, year)) {
+		try {valid(day, month, year);
 			this.day = day;
-		}
-	}
+		}catch (InvalidDateException e){
+			System.out.println("The date is invalid! Application closing.");
+			System.exit(0);
+	}}
 
 	public int getYear() {
 		return year;
 	}
 
 	public void setYear(int year) {
-		if (valid(day, month, year)) {
+		try {valid(day, month, year);
 			this.year = year;
-		}
-	}
+		}catch (InvalidDateException e){
+			System.out.println("The date is invalid! Application closing.");
+			System.exit(0);
+		}}
 
 	public int getMonth() {
 		return month;
 	}
 
-	public void setMonth(int month) {
-		if (valid(day, month, year)) {
-			this.month = month;
-		}
-	}
+	public void setMonth(int month) {try {valid(day, month, year);
+		this.month = month;
+	}catch (InvalidDateException e){
+		System.out.println("The date is invalid! Application closing.");
+		System.exit(0);
+	}}
 
-	private boolean valid(int day, int month, int year) {
+	private void valid(int day, int month, int year) throws InvalidDateException{
 		if (day > 31 || day < 1 || month > 12 || month < 1) {
 			System.out.println("Attempting to create a non-valid date " + month + "/" + day + "/" + year);
-			return false;
+			throw new InvalidDateException();
 		}
 		switch (month) {
 		case 4:
 		case 6:
 		case 9:
 		case 11:
-			return (day <= 30);
+			if  (day > 30){throw new InvalidDateException();}
 		case 2:
-			return day <= 28 || (day == 29 && year % 4 == 0);
+			if( (day <= 28 || (day == 29 && (year % 4==0 )))==false)
+		{throw new InvalidDateException();}
 		}
-		return true;
 	}
 
 	public boolean equals(Object o) {

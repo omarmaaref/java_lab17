@@ -1,14 +1,14 @@
 package com.acme.testing;
 
+import com.acme.utils.InvalidDateException;
 import com.acme.utils.MyDate;
 
 public class TestMyDate {
 
 	public static void main(String[] args) {
 
-		MyDate date1 = new MyDate(11, 11, 1918);
+	try{	MyDate date1 = new MyDate(11, 11, 1918);
 		MyDate date2 = new MyDate();
-
 		MyDate newYear = new MyDate(1, 1, 2009);
 		MyDate fiscalStart = new MyDate(1, 1, 2009);
 
@@ -21,9 +21,9 @@ public class TestMyDate {
 		date3.setDate(4, 21, 1968);
 
 		String str1 = date1.toString();
+
 		String str2 = date2.toString();
 		String str3 = date3.toString();
-
 		System.out.println(str1);
 		System.out.println(str2);
 		System.out.println(str3);
@@ -42,6 +42,15 @@ public class TestMyDate {
 		else
 			System.out.println("These two dates are not equal");
 		MyDate.listHolidays();
+	}
+
+	catch(InvalidDateException e){System.out.println("invalid date");
+		System.exit(0);
+	}
+
+
+
+
 	}
 
 }
